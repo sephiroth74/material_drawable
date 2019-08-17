@@ -17,6 +17,8 @@ class MaterialBackgroundDrawable {
         private val evaluator = ArgbEvaluator()
         private val states = hashMapOf<Int, Int>()
 
+        constructor()
+
         constructor(body : Builder.() -> Unit) {
             this.body()
         }
