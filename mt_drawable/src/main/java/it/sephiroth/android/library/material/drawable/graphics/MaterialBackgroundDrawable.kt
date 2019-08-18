@@ -65,10 +65,22 @@ class MaterialBackgroundDrawable {
         }
 
         fun ripple(@ColorInt color: Int, style: MaterialShapeDrawable.Style): Builder {
-            ripple = RippleDrawable(ColorStateList.valueOf(color), selector, shape.clone().of(style).build())
+            ripple = RippleDrawable(
+                ColorStateList.valueOf(color),
+                selector,
+                shape.clone().of(style).build()
+            )
             return this
         }
 
+        fun ripple(@ColorInt color: Int): Builder {
+            ripple = RippleDrawable(
+                ColorStateList.valueOf(color),
+                selector,
+                shape.clone().build()
+            )
+            return this
+        }
 
         fun disabled(drawable: MaterialShapeDrawable.Builder): Builder {
             return state(-android.R.attr.state_enabled, drawable)
@@ -98,9 +110,9 @@ class MaterialBackgroundDrawable {
             return state(intArrayOf(), drawable)
         }
 
-        fun ripple(@ColorInt color: Int, drawable: MaterialShapeDrawable.Builder): Builder {
+        fun ripple(@ColorInt color: Int, drawable: MaterialShapeDrawable.Builder): Drawable {
             ripple = RippleDrawable(ColorStateList.valueOf(color), selector, drawable.build())
-            return this
+            return this.build()
         }
 
         fun build(): Drawable {

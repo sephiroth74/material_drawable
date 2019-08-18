@@ -10,6 +10,7 @@ class MaterialShape(private val type: Type) : Shape() {
 
     constructor() : this(Type.START)
 
+    var strokeWidth: Float = 0f
     private val path = Path()
     private val bounds = RectF()
 
@@ -27,10 +28,10 @@ class MaterialShape(private val type: Type) : Shape() {
         path.moveTo(0f, 0f)
         path.lineTo(bounds.right - bounds.height() / 2, 0f)
         path.arcTo(
-                RectF(bounds.right - bounds.height(), 0f, bounds.right, bounds.height()),
-                270f,
-                180f
-                  )
+            RectF(bounds.right - bounds.height(), 0f, bounds.right, bounds.height()),
+            270f,
+            180f
+        )
         path.lineTo(0f, bounds.height())
         path.close()
     }

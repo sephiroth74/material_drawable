@@ -18,10 +18,14 @@ class MaterialShapeDrawable(private val s: Shape?) : ShapeDrawable(s) {
         paint.strokeJoin = Paint.Join.ROUND
     }
 
-    fun clone() = MaterialShapeDrawable(s)
+    fun clone(): MaterialShapeDrawable {
+        val cloned = MaterialShapeDrawable(s)
+        cloned.paint.set(paint)
+        return cloned
+    }
 
     override fun onBoundsChange(bounds: Rect?) {
-        if (paint.style != Paint.Style.FILL && paint.strokeWidth > 0) {
+        if (paint.strokeWidth > 0) {
             bounds?.inset(paint.strokeWidth.roundToInt(), paint.strokeWidth.roundToInt())
         }
         super.onBoundsChange(bounds)
@@ -35,12 +39,16 @@ class MaterialShapeDrawable(private val s: Shape?) : ShapeDrawable(s) {
         return super.getMinimumHeight()
     }
 
-    class Style {
+    class Style() {
         private var style: Paint.Style? = null
         private var color: Int? = null
         private var tint: Int? = null
         private var alpha: Int? = null
         private var strokeWidth: Float? = null
+
+        constructor(func: Style.() -> Unit) : this() {
+            this.func()
+        }
 
         fun style(style: Paint.Style): Style {
             this.style = style
@@ -123,6 +131,7 @@ class MaterialShapeDrawable(private val s: Shape?) : ShapeDrawable(s) {
 
         fun strokeWidth(width: Float): Builder {
             drawable.paint.strokeWidth = width
+            (drawable.shape as MaterialShape).strokeWidth = width
             return this
         }
 
