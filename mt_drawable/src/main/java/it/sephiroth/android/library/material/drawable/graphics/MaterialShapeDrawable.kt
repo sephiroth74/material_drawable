@@ -6,7 +6,8 @@ import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.Shape
 import kotlin.math.roundToInt
 
-class MaterialShapeDrawable(s: Shape?) : ShapeDrawable(s) {
+@Suppress("unused")
+class MaterialShapeDrawable(private val s: Shape?) : ShapeDrawable(s) {
 
     @Suppress("unused")
     constructor() : this(null)
@@ -16,6 +17,8 @@ class MaterialShapeDrawable(s: Shape?) : ShapeDrawable(s) {
         paint.strokeCap = Paint.Cap.SQUARE
         paint.strokeJoin = Paint.Join.ROUND
     }
+
+    fun clone() = MaterialShapeDrawable(s)
 
     override fun onBoundsChange(bounds: Rect?) {
         if (paint.style != Paint.Style.FILL && paint.strokeWidth > 0) {
@@ -32,10 +35,66 @@ class MaterialShapeDrawable(s: Shape?) : ShapeDrawable(s) {
         return super.getMinimumHeight()
     }
 
-    class Builder(type: MaterialShape.Type) {
-        val shape: MaterialShape =
-                MaterialShape(type)
-        val drawable = MaterialShapeDrawable(shape)
+    class Style {
+        private var style: Paint.Style? = null
+        private var color: Int? = null
+        private var tint: Int? = null
+        private var alpha: Int? = null
+        private var strokeWidth: Float? = null
+
+        fun style(style: Paint.Style): Style {
+            this.style = style
+            return this
+        }
+
+        fun color(color: Int): Style {
+            this.color = color
+            return this
+        }
+
+        fun tint(color: Int): Style {
+            this.tint = color
+            return this
+        }
+
+        fun alpha(alpha: Int): Style {
+            this.alpha = alpha
+            return this
+        }
+
+        fun alpha(alpha: Float): Style {
+            this.alpha = (alpha * 255).toInt()
+            return this
+        }
+
+        fun strokeWidth(width: Float): Style {
+            this.strokeWidth = width
+            return this
+        }
+
+        fun copyTo(builder: Builder) {
+            style?.let { builder.style(it) }
+            color?.let { builder.color(it) }
+            tint?.let { builder.tint(it) }
+            alpha?.let { builder.alpha(it) }
+            strokeWidth?.let { builder.strokeWidth(it) }
+        }
+    }
+
+    class Builder(private var type: MaterialShape.Type) {
+
+        private var drawable = MaterialShapeDrawable(MaterialShape(type))
+
+        fun of(style: Style): Builder {
+            style.copyTo(this)
+            return this
+        }
+
+        fun clone(): Builder {
+            val builder = Builder(type)
+            builder.drawable = drawable.clone()
+            return builder
+        }
 
         fun style(style: Paint.Style): Builder {
             drawable.paint.style = style

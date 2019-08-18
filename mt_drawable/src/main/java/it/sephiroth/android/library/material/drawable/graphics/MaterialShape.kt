@@ -14,7 +14,6 @@ class MaterialShape(private val type: Type) : Shape() {
     private val bounds = RectF()
 
     private fun invalidatePath() {
-//        path.rewind()
         path.reset()
 
         when (type) {
