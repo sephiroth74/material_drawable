@@ -25,10 +25,11 @@ class MaterialShape(private val type: Type) : Shape() {
     }
 
     private fun invalidatePathStart() {
+        val start = bounds.right - bounds.height() / 2
         path.moveTo(0f, 0f)
-        path.lineTo(bounds.right - bounds.height() / 2, 0f)
+        path.lineTo(start, 0f)
         path.arcTo(
-            RectF(bounds.right - bounds.height(), 0f, bounds.right, bounds.height()),
+            RectF((bounds.right - bounds.height()), 0f, bounds.right, bounds.height()),
             270f,
             180f
         )
@@ -41,11 +42,19 @@ class MaterialShape(private val type: Type) : Shape() {
         val w = bounds.width()
         val r = bounds.right
 
-        path.moveTo(h / 2, 0f)
-        path.lineTo(w - h / 2, 0f)
-        path.arcTo(RectF(r - h, 0f, r, h), 270f, 180f)
-        path.lineTo(h / 2, h)
-        path.arcTo(RectF(0f, 0f, h, h), 90f, 180f)
+
+        if (w < h) {
+            path.moveTo(w / 2, 0f)
+            path.arcTo(RectF(w / 2, 0f, r, h), 270f, 180f)
+            path.lineTo(w / 2, h)
+            path.arcTo(RectF(0f, 0f, w / 2, h), 90f, 180f)
+        } else {
+            path.moveTo(h / 2, 0f)
+            path.lineTo(w - h / 2, 0f)
+            path.arcTo(RectF(r - h, 0f, r, h), 270f, 180f)
+            path.lineTo(h / 2, h)
+            path.arcTo(RectF(0f, 0f, h, h), 90f, 180f)
+        }
         path.close()
     }
 
@@ -64,8 +73,18 @@ class MaterialShape(private val type: Type) : Shape() {
         invalidatePath()
     }
 
+//    val debugPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+//        setColor(Color.YELLOW)
+//        setStyle(Paint.Style.STROKE)
+//        strokeWidth = 4f
+//    }
+
     override fun draw(canvas: Canvas, paint: Paint) {
+        canvas.saveLayer(bounds, null)
         canvas.drawPath(path, paint)
+        canvas.restore()
+//        canvas.drawRect(bounds, debugPaint)
+
     }
 
     enum class Type {
