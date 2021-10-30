@@ -2,6 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'maven-publish'
 
 group 'it.sephiroth.android.library'
 version '1.0.0'
@@ -25,6 +26,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11.toString()
+    }    
 }
 
 dependencies {
@@ -39,36 +49,16 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }
 
-//
-//apply plugin: 'com.bmuschko.nexus'
-//
-//modifyPom {
-//    project {
-//        name 'Material Drawable'
-//        description 'Material Drawable for Android'
-//        url 'https://github.com/sephiroth74/material_drawable'
-//
-//        scm {
-//            url 'https://github.com/sephiroth74/material_drawable'
-//            connection 'scm:https://git@github.com:sephiroth74/material_drawable.git'
-//            developerConnection 'scm:git://git@github.com:sephiroth74/material_drawable.git'
-//        }
-//
-//        licenses {
-//            license {
-//                name 'MIT License'
-//                url 'https://raw.githubusercontent.com/sephiroth74/material_drawable/master/LICENSE'
-//                distribution 'repo'
-//            }
-//        }
-//
-//        developers {
-//            developer {
-//                id 'sephiroth74'
-//                name 'alessandro crugnola'
-//                email 'alessandro.crugnola@gmail.com'
-//                roles 'architect', 'developer'
-//            }
-//        }
-//    }
-//}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'it.sephiroth.android.library'
+                artifactId = 'material_drawable'
+                version = '2.0.2'
+            }
+        }
+    }
+}
