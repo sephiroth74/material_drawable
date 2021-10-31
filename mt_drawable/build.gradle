@@ -4,8 +4,9 @@ apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'maven-publish'
 
+
 group 'it.sephiroth.android.library'
-version '1.0.0'
+version '3.0.0'
 
 android {
     kotlinOptions.useIR = true
@@ -34,7 +35,7 @@ android {
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11.toString()
-    }    
+    }
 }
 
 dependencies {
@@ -55,10 +56,12 @@ afterEvaluate {
         publications {
             release(MavenPublication) {
                 from components.release
-                groupId = 'it.sephiroth.android.library'
+                groupId = group
                 artifactId = 'material_drawable'
-                version = '2.0.2'
+                version = version
             }
         }
+    }
+}
     }
 }
