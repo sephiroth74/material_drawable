@@ -37,7 +37,9 @@ class MainActivity : AppCompatActivity() {
                 color(Color.GREEN)
             })
             normal(MaterialShapeDrawable.Style {
-                color(Color.BLUE)
+                color(Color.BLACK)
+                strokeWidth(2f)
+                style(Paint.Style.STROKE)
             })
         }.build()
 
@@ -48,13 +50,13 @@ class MainActivity : AppCompatActivity() {
     class CustomView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     ) : View(context, attrs, defStyleAttr) {
-        val background2 = MaterialBackgroundDrawable.Builder(MaterialShape.Type.START) {
+        private val background2 = MaterialBackgroundDrawable.Builder(MaterialShape.Type.START) {
             normal(MaterialShapeDrawable.Style {
                 color(Color.LTGRAY)
             })
         }.build()
 
-        val debugPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        private val debugPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = Color.RED
             strokeWidth = 6f
             style = Paint.Style.STROKE
@@ -62,8 +64,7 @@ class MainActivity : AppCompatActivity() {
 
         override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
             super.onSizeChanged(w, h, oldw, oldh)
-
-            background2.setBounds(100, 0, 200, height)
+            background2.setBounds(paddingLeft, paddingTop, w - paddingRight, h - paddingBottom)
         }
 
         override fun onDraw(canvas: Canvas) {

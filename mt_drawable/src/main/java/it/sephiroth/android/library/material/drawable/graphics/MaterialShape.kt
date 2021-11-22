@@ -25,45 +25,56 @@ class MaterialShape(private val type: Type) : Shape() {
     }
 
     private fun invalidatePathStart() {
-        val start = bounds.right - bounds.height() / 2
-        path.moveTo(0f, 0f)
-        path.lineTo(start, 0f)
+        val s = strokeWidth / 2
+        val startX = bounds.right - (bounds.height() / 2) - s
+        path.moveTo(s, s)
+        path.lineTo(startX, s)
+
+
         path.arcTo(
-            RectF((bounds.right - bounds.height()), 0f, bounds.right, bounds.height()),
+            RectF(
+                (bounds.right - bounds.height() - s),
+                s,
+                bounds.right - s,
+                bounds.height() - s
+            ),
             270f,
-            180f
+            180f,
+            false
         )
-        path.lineTo(0f, bounds.height())
+
+        path.lineTo(s, bounds.height() - s)
         path.close()
     }
 
     private fun invalidatePathAll() {
+        val s = strokeWidth / 2
         val h = bounds.height()
         val w = bounds.width()
         val r = bounds.right
 
-
         if (w < h) {
-            path.moveTo(w / 2, 0f)
-            path.arcTo(RectF(w / 2, 0f, r, h), 270f, 180f)
-            path.lineTo(w / 2, h)
-            path.arcTo(RectF(0f, 0f, w / 2, h), 90f, 180f)
+            path.moveTo(w / 2 + s, s)
+            path.arcTo(RectF(w / 2 - s, s, r - s, h - s), 270f, 180f)
+            path.lineTo(w / 2 + s, h - s)
+            path.arcTo(RectF(s, s, w / 2 + s, h - 2), 90f, 180f)
         } else {
-            path.moveTo(h / 2, 0f)
-            path.lineTo(w - h / 2, 0f)
-            path.arcTo(RectF(r - h, 0f, r, h), 270f, 180f)
-            path.lineTo(h / 2, h)
-            path.arcTo(RectF(0f, 0f, h, h), 90f, 180f)
+            path.moveTo(h / 2 + s, s)
+            path.lineTo(w - h / 2 - s, s)
+            path.arcTo(RectF(r - h - s, s, r - s, h - s), 270f, 180f)
+            path.lineTo(h / 2 - s, h - s)
+            path.arcTo(RectF(s, s, h - s, h - s), 90f, 180f)
         }
         path.close()
     }
 
     private fun invalidatePathEnd() {
-        path.moveTo(bounds.height() / 2, 0f)
-        path.lineTo(bounds.right, 0f)
-        path.lineTo(bounds.right, bounds.height())
-        path.lineTo(bounds.height() / 2, bounds.height())
-        path.arcTo(RectF(0f, 0f, bounds.height(), bounds.height()), 90f, 180f)
+        val s = strokeWidth / 2
+        path.moveTo(bounds.height() / 2 + s, s)
+        path.lineTo(bounds.right - s, s)
+        path.lineTo(bounds.right - s, bounds.height() - s)
+        path.lineTo(bounds.height() / 2 + s, bounds.height() - s)
+        path.arcTo(RectF(s, s, bounds.height() - s, bounds.height() - s), 90f, 180f)
         path.close()
     }
 
@@ -89,6 +100,10 @@ class MaterialShape(private val type: Type) : Shape() {
 
     enum class Type {
         ALL, START, END
+    }
+
+    companion object {
+        const val TAG = "MaterialShape"
     }
 
 }

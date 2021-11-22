@@ -4,7 +4,6 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.Shape
-import kotlin.math.roundToInt
 
 @Suppress("unused")
 class MaterialShapeDrawable(private val s: Shape?) : ShapeDrawable(s) {
@@ -13,9 +12,9 @@ class MaterialShapeDrawable(private val s: Shape?) : ShapeDrawable(s) {
     constructor() : this(null)
 
     init {
-        paint.flags = Paint.ANTI_ALIAS_FLAG
-        paint.strokeCap = Paint.Cap.SQUARE
-        paint.strokeJoin = Paint.Join.ROUND
+        paint.flags = Paint.SUBPIXEL_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG
+        paint.strokeCap = Paint.Cap.BUTT
+        paint.strokeJoin = Paint.Join.MITER
     }
 
     fun clone(): MaterialShapeDrawable {
@@ -26,17 +25,16 @@ class MaterialShapeDrawable(private val s: Shape?) : ShapeDrawable(s) {
 
     override fun onBoundsChange(bounds: Rect?) {
         if (paint.strokeWidth > 0) {
-            bounds?.inset(paint.strokeWidth.roundToInt(), paint.strokeWidth.roundToInt())
+//            bounds?.inset(
+//                paint.strokeWidth.roundToInt() / 4,
+//                paint.strokeWidth.roundToInt() / 4
+//            )
         }
         super.onBoundsChange(bounds)
     }
 
-    override fun getMinimumWidth(): Int {
-        return super.getMinimumWidth()
-    }
-
-    override fun getMinimumHeight(): Int {
-        return super.getMinimumHeight()
+    companion object {
+        const val TAG = "MaterialShapeDrawable"
     }
 
     class Style() {
