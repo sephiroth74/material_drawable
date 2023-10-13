@@ -27,6 +27,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onContentChanged() {
         super.onContentChanged()
+
+        TextDrawable.DEBUG_LOG = false
+
         textView1 = findViewById(R.id.textView1)
 
         val icon1 = resources.getDrawable(R.drawable.shopping)
@@ -36,7 +39,7 @@ class MainActivity : AppCompatActivity() {
             text("Hello World")
             textSize(32f)
             color(0x99000000)
-            textPadding(50, 10)
+            textPadding(60, 10)
             padding(0, 0, 0, 0)
             typeface(Typeface.MONOSPACE)
             bold(true)

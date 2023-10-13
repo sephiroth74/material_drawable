@@ -135,10 +135,9 @@ class TextDrawable(builder: Builder.() -> Unit) : Drawable() {
         intrinsicWidth = size.width
         intrinsicHeight = size.height
 
-        Log.v(
-            TAG,
-            "textSize=${textPaint.textSize}, intrinsicWidth=$intrinsicWidth, intrinsicHeight=$intrinsicHeight"
-        )
+        if (DEBUG_LOG) {
+            Log.v(TAG, "textSize=${textPaint.textSize}, intrinsicWidth=$intrinsicWidth, intrinsicHeight=$intrinsicHeight")
+        }
     }
 
     override fun getIntrinsicWidth(): Int {
@@ -211,23 +210,31 @@ class TextDrawable(builder: Builder.() -> Unit) : Drawable() {
         var y = (bounds.height() / 2 - textBounds.exactCenterY()) + paddingTop / 2 - paddingBottom / 2
 
         compoundDrawables.firstOrNull()?.let { first ->
+            if (DEBUG_LOG) {
+                canvas.drawRect(first.bounds, debugPaint)
+            }
             first.draw(canvas)
             x += first.bounds.width() + compoundPadding
         }
 
         compoundDrawables.lastOrNull()?.let { last ->
+            if (DEBUG_LOG) {
+                canvas.drawRect(last.bounds, debugPaint)
+            }
             last.draw(canvas)
         }
 
         canvas.drawText(text, x.toFloat(), y, textPaint)
 
-        //canvas.drawRect(x.toFloat(), y, (x + textBounds.width()).toFloat(), y - textBounds.height(), debugPaint)
+        if (DEBUG_LOG) {
+            canvas.drawRect(x.toFloat(), y, (x + textBounds.width()).toFloat(), y - textBounds.height(), debugPaint)
+        }
     }
 
 
     companion object {
         const val TAG = "TextDrawable"
-        var DEBUG_LOG: Boolean = false
+        var DEBUG_LOG: Boolean = true
 
         class Builder {
             internal var textPadding: Size = Size(0, 0)
@@ -276,6 +283,8 @@ class TextDrawable(builder: Builder.() -> Unit) : Drawable() {
             }
 
             fun compoundDrawables(left: Drawable?, right: Drawable?) = apply {
+                left?.let { check(!it.bounds.isEmpty) { "left drawable must have bounds set" } }
+                right?.let { check(!it.bounds.isEmpty) { "right drawable must have bounds set" } }
                 compoundDrawables[0] = left
                 compoundDrawables[1] = right
             }
