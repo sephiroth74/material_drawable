@@ -1,7 +1,6 @@
 package it.sephiroth.android.library.material.drawable.graphics
 
 import android.graphics.Paint
-import android.graphics.Rect
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.Shape
 
@@ -21,16 +20,6 @@ class MaterialShapeDrawable(private val s: Shape?) : ShapeDrawable(s) {
         val cloned = MaterialShapeDrawable(s)
         cloned.paint.set(paint)
         return cloned
-    }
-
-    override fun onBoundsChange(bounds: Rect?) {
-        if (paint.strokeWidth > 0) {
-//            bounds?.inset(
-//                paint.strokeWidth.roundToInt() / 4,
-//                paint.strokeWidth.roundToInt() / 4
-//            )
-        }
-        super.onBoundsChange(bounds)
     }
 
     companion object {
@@ -80,7 +69,7 @@ class MaterialShapeDrawable(private val s: Shape?) : ShapeDrawable(s) {
 
         fun copyTo(builder: Builder) {
             style?.let { builder.style(it) }
-            color?.let { builder.color(it) }
+            color?.let { builder.color(it.toLong()) }
             tint?.let { builder.tint(it) }
             alpha?.let { builder.alpha(it) }
             strokeWidth?.let { builder.strokeWidth(it) }
@@ -107,8 +96,8 @@ class MaterialShapeDrawable(private val s: Shape?) : ShapeDrawable(s) {
             return this
         }
 
-        fun color(color: Int): Builder {
-            drawable.paint.color = color
+        fun color(color: Long): Builder {
+            drawable.paint.color = color.toInt()
             return this
         }
 

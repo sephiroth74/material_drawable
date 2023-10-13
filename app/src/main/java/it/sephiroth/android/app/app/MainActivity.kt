@@ -4,19 +4,20 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.Typeface
 import android.os.Bundle
 import android.util.AttributeSet
 import android.util.Log
-import android.view.DragEvent
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import it.sephiroth.android.library.material.drawable.graphics.MaterialBackgroundDrawable
 import it.sephiroth.android.library.material.drawable.graphics.MaterialShape
 import it.sephiroth.android.library.material.drawable.graphics.MaterialShapeDrawable
+import it.sephiroth.android.library.material.drawable.graphics.TextDrawable
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var textView1: View
+    private lateinit var textView1: TextView
     private lateinit var textView2: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,24 +28,38 @@ class MainActivity : AppCompatActivity() {
     override fun onContentChanged() {
         super.onContentChanged()
         textView1 = findViewById(R.id.textView1)
-        textView2 = findViewById(R.id.textView2)
 
-        textView1.background = MaterialBackgroundDrawable.Builder(MaterialShape.Type.ALL) {
-            focused(MaterialShapeDrawable.Style {
-                color(Color.YELLOW)
-            })
-            pressed(MaterialShapeDrawable.Style {
-                color(Color.GREEN)
-            })
-            normal(MaterialShapeDrawable.Style {
-                color(Color.BLACK)
-                strokeWidth(2f)
-                style(Paint.Style.STROKE)
-            })
-        }.build()
+        val icon1 = resources.getDrawable(R.drawable.shopping)
+        icon1.setBounds(0, 0, 30, 30)
 
-        textView1.setOnClickListener { Log.v("this", "onclick") }
-        textView2.setOnClickListener { Log.v("this", "onclick") }
+        val drawable = TextDrawable {
+            text("Hello World")
+            textSize(32f)
+            color(0x99000000)
+            textPadding(50, 10)
+            padding(0, 0, 0, 0)
+            typeface(Typeface.MONOSPACE)
+            bold(true)
+            background(MaterialShapeDrawable.Builder(MaterialShape.Type.ALL).color(0xff25B252).build())
+            compoundDrawables(icon1, null)
+            compoundPadding(20)
+        }
+
+
+        textView1.background = drawable
+
+//        drawable.callback = textView1
+
+//        Log.d(TAG, "density: " + resources.displayMetrics.density)
+//        Log.d(TAG, "densityDpi: " + resources.displayMetrics.densityDpi)
+//        Log.d(TAG, "heightPixels: " + resources.displayMetrics.heightPixels)
+//        Log.d(TAG, "scaledDensity: " + resources.displayMetrics.scaledDensity)
+//        Log.d(TAG, "ydpi: " + resources.displayMetrics.ydpi)
+
+
+//        textView1.setOnClickListener { Log.v("this", "onclick") }
+
+        Log.d(TAG, "Drawable added...")
     }
 
     class CustomView @JvmOverloads constructor(
@@ -73,5 +88,9 @@ class MainActivity : AppCompatActivity() {
             canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), debugPaint)
         }
 
+    }
+
+    companion object {
+        const val TAG = "MainActivity"
     }
 }
