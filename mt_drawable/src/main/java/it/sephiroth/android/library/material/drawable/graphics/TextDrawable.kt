@@ -56,9 +56,13 @@ class TextDrawable(builder: Builder.() -> Unit) : Drawable() {
         compoundPadding = builder.compoundPadding
 
         onTextSizeChanged()
+        bounds = Rect(0, 0, intrinsicWidth, intrinsicHeight)
     }
 
     private fun applyNewTextSize(maxHeight: Int) {
+        if (DEBUG_LOG) {
+            Log.d(TAG, "applyNewTextSize(maxHeight=$maxHeight)")
+        }
         var size = Size(intrinsicWidth, intrinsicHeight)
 
         if (DEBUG_LOG) {
@@ -154,6 +158,16 @@ class TextDrawable(builder: Builder.() -> Unit) : Drawable() {
 
     override fun setColorFilter(colorFilter: ColorFilter?) {
         textPaint.colorFilter = colorFilter
+        compoundDrawables.firstOrNull()?.let { it.colorFilter = colorFilter }
+        compoundDrawables.lastOrNull()?.let { it.colorFilter = colorFilter }
+    }
+
+    fun setBackgroundColorFilter(colorFilter: ColorFilter?) {
+        background?.colorFilter = colorFilter
+    }
+
+    fun getBackgroundColorFilter(): ColorFilter? {
+        return background?.colorFilter
     }
 
     override fun getOpacity(): Int {
@@ -201,8 +215,11 @@ class TextDrawable(builder: Builder.() -> Unit) : Drawable() {
 
 
     override fun draw(canvas: Canvas) {
-
         val bounds = this.bounds
+
+        if (DEBUG_LOG) {
+            Log.v(TAG, "draw(bounds=$bounds)")
+        }
 
         background?.draw(canvas)
 
