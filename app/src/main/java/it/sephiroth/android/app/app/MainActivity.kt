@@ -4,13 +4,16 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.Typeface
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
+import android.text.SpannableStringBuilder
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.toSpannable
 import it.sephiroth.android.library.material.drawable.graphics.MaterialBackgroundDrawable
 import it.sephiroth.android.library.material.drawable.graphics.MaterialShape
 import it.sephiroth.android.library.material.drawable.graphics.MaterialShapeDrawable
@@ -27,39 +30,44 @@ class MainActivity : AppCompatActivity() {
 
     override fun onContentChanged() {
         super.onContentChanged()
-
         TextDrawable.DEBUG_LOG = false
 
         textView1 = findViewById(R.id.textView1)
 
-        val icon1 = resources.getDrawable(R.drawable.shopping)
-        icon1.setBounds(0, 0, 30, 30)
+        val textSize = textView1.textSize
+        Log.v(TAG, "textSize: $textSize")
 
-        val drawable = TextDrawable {
-            text("Hello World")
-            textSize(32f)
-            color(0x99000000)
-            textPadding(60, 10)
-            padding(0, 0, 0, 0)
-            typeface(Typeface.MONOSPACE)
-            bold(true)
-            background(MaterialShapeDrawable.Builder(MaterialShape.Type.ALL).color(0xff25B252).build())
-            compoundDrawables(icon1, null)
-            compoundPadding(20)
+        val icon1 = resources.getDrawable(R.drawable.shopping).apply {
+            setBounds(0, 0, textSize.toInt(), textSize.toInt())
         }
 
+        val icon2 = resources.getDrawable(android.R.drawable.ic_menu_edit).apply {
+            setBounds(0, 0, textSize.toInt(), textSize.toInt())
+        }
 
-        textView1.background = drawable
+        val drawable = TextDrawable {
+            text("€ 29.90")
+            textSize(textSize)
+            color(0x99000000)
+            textPadding(60, 10)
+            padding(0, 6, 0, 6)
+            typeface(textView1.paint.typeface)
+            textAlign(Paint.Align.CENTER)
+            background(MaterialShapeDrawable.Builder(MaterialShape.Type.ALL).color(0xff25B252).build())
+            compoundDrawables(icon1, null)
+            compoundPadding(14)
+        }
 
+//        drawable.colorFilter = PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP)
+        drawable.setBackgroundColorFilter(PorterDuffColorFilter(0x25B252, PorterDuff.Mode.SRC_ATOP))
+
+        val builder = SpannableStringBuilder()
+        builder.append("The Avengers:  ")
+        SpannableStringBuilderUtil.appendDrawable(this, builder, drawable)
+        textView1.text = builder.toSpannable()
+
+//        textView1.background = drawable
 //        drawable.callback = textView1
-
-//        Log.d(TAG, "density: " + resources.displayMetrics.density)
-//        Log.d(TAG, "densityDpi: " + resources.displayMetrics.densityDpi)
-//        Log.d(TAG, "heightPixels: " + resources.displayMetrics.heightPixels)
-//        Log.d(TAG, "scaledDensity: " + resources.displayMetrics.scaledDensity)
-//        Log.d(TAG, "ydpi: " + resources.displayMetrics.ydpi)
-
-
 //        textView1.setOnClickListener { Log.v("this", "onclick") }
 
         Log.d(TAG, "Drawable added...")

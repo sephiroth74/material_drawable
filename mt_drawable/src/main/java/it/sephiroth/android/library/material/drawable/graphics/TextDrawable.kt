@@ -1,15 +1,19 @@
 package it.sephiroth.android.library.material.drawable.graphics
 
+import android.graphics.BlendMode
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.ColorFilter
 import android.graphics.Paint
 import android.graphics.PixelFormat
+import android.graphics.PointF
 import android.graphics.Rect
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.util.Log
 import android.util.Size
+import androidx.annotation.RequiresApi
 import kotlin.math.absoluteValue
 
 class TextDrawable(builder: Builder.() -> Unit) : Drawable() {
@@ -31,12 +35,15 @@ class TextDrawable(builder: Builder.() -> Unit) : Drawable() {
     private val paddingEnd: Int
 
     private val textBounds = Rect()
+    private val textOrigin = PointF(0f, 0f)
+
+    private val textAlign: Paint.Align
 
     init {
         with(debugPaint) {
             color = Color.RED
             style = Paint.Style.STROKE
-            strokeWidth = 1f
+            strokeWidth = 0.5f
         }
 
         val builder = Builder().apply(builder)
@@ -54,6 +61,8 @@ class TextDrawable(builder: Builder.() -> Unit) : Drawable() {
         background = builder.background
         compoundDrawables = builder.compoundDrawables
         compoundPadding = builder.compoundPadding
+
+        textAlign = builder.textAlign
 
         onTextSizeChanged()
         bounds = Rect(0, 0, intrinsicWidth, intrinsicHeight)
@@ -164,6 +173,7 @@ class TextDrawable(builder: Builder.() -> Unit) : Drawable() {
 
     fun setBackgroundColorFilter(colorFilter: ColorFilter?) {
         background?.colorFilter = colorFilter
+        invalidateSelf()
     }
 
     fun getBackgroundColorFilter(): ColorFilter? {
@@ -200,14 +210,47 @@ class TextDrawable(builder: Builder.() -> Unit) : Drawable() {
             bg.bounds = boundsCopy
         }
 
+        var totalWidth: Float = textBounds.width().toFloat()
+        compoundDrawables.firstOrNull()?.let {
+            totalWidth += it.bounds.width() + compoundPadding
+        }
+        compoundDrawables.lastOrNull()?.let {
+            totalWidth += it.bounds.width() + compoundPadding
+        }
+
+        if (textAlign == Paint.Align.CENTER) {
+            textOrigin.x = bounds.centerX().toFloat() - totalWidth / 2
+        } else if (textAlign == Paint.Align.RIGHT) {
+            textOrigin.x = (bounds.right - textBounds.width() - paddingEnd - (textPaddingHorizontal / 2)).toFloat()
+        } else {
+            textOrigin.x = (paddingStart + (textPaddingHorizontal / 2)).toFloat()
+        }
+
+        textOrigin.y = (bounds.height() / 2 - textBounds.exactCenterY()) + paddingTop / 2 - paddingBottom / 2
+
         compoundDrawables.firstOrNull()?.let { first ->
             val b = first.bounds
-            b.offsetTo(paddingStart + textPaddingHorizontal / 2, bounds.centerY() - (b.height() / 2))
+            if (textAlign == Paint.Align.CENTER) {
+                b.offsetTo(textOrigin.x.toInt(), bounds.centerY() - (b.height() / 2))
+                textOrigin.x += b.width() + compoundPadding
+            } else if (textAlign == Paint.Align.LEFT) {
+                b.offsetTo(paddingStart + textPaddingHorizontal / 2, bounds.centerY() - (b.height() / 2))
+                textOrigin.x += b.width() + compoundPadding
+            } else {
+                b.offsetTo((bounds.right - totalWidth - paddingEnd - textPaddingHorizontal / 2).toInt(), bounds.centerY() - (b.height() / 2))
+            }
         }
 
         compoundDrawables.lastOrNull()?.let { last ->
             val b = last.bounds
-            b.offsetTo(bounds.width() - paddingEnd - textPaddingHorizontal / 2 - b.width(), bounds.centerY() - (b.height() / 2))
+            if (textAlign == Paint.Align.CENTER) {
+                b.offsetTo((bounds.centerX() + totalWidth / 2 - b.width()).toInt(), bounds.centerY() - b.height() / 2)
+            } else if (textAlign == Paint.Align.LEFT) {
+                b.offsetTo((textOrigin.x + textBounds.width() + compoundPadding).toInt(), bounds.centerY() - (b.height() / 2))
+            } else {
+                b.offsetTo(bounds.width() - paddingEnd - textPaddingHorizontal / 2 - b.width(), bounds.centerY() - (b.height() / 2))
+                textOrigin.x -= (b.width() + compoundPadding)
+            }
         }
 
         super.onBoundsChange(bounds)
@@ -219,19 +262,20 @@ class TextDrawable(builder: Builder.() -> Unit) : Drawable() {
 
         if (DEBUG_LOG) {
             Log.v(TAG, "draw(bounds=$bounds)")
+            with(debugPaint) {
+                color = Color.RED
+                style = Paint.Style.STROKE
+                strokeWidth = 0.5f
+            }
         }
 
         background?.draw(canvas)
-
-        var x = paddingStart + (textPaddingHorizontal / 2)
-        var y = (bounds.height() / 2 - textBounds.exactCenterY()) + paddingTop / 2 - paddingBottom / 2
 
         compoundDrawables.firstOrNull()?.let { first ->
             if (DEBUG_LOG) {
                 canvas.drawRect(first.bounds, debugPaint)
             }
             first.draw(canvas)
-            x += first.bounds.width() + compoundPadding
         }
 
         compoundDrawables.lastOrNull()?.let { last ->
@@ -241,10 +285,28 @@ class TextDrawable(builder: Builder.() -> Unit) : Drawable() {
             last.draw(canvas)
         }
 
-        canvas.drawText(text, x.toFloat(), y, textPaint)
+        canvas.drawText(text, textOrigin.x, textOrigin.y, textPaint)
 
         if (DEBUG_LOG) {
-            canvas.drawRect(x.toFloat(), y, (x + textBounds.width()).toFloat(), y - textBounds.height(), debugPaint)
+            canvas.drawRect(textOrigin.x, textOrigin.y, (textOrigin.x + textBounds.width()), textOrigin.y - textBounds.height(), debugPaint)
+            canvas.drawLine(bounds.left.toFloat(), bounds.centerY().toFloat(), bounds.right.toFloat(), bounds.centerY().toFloat(), debugPaint)
+            canvas.drawLine(bounds.centerX().toFloat(), bounds.top.toFloat(), bounds.centerX().toFloat(), bounds.bottom.toFloat(), debugPaint)
+
+            with(debugPaint) {
+                color = Color.BLUE
+                alpha = 51
+                style = Paint.Style.FILL
+            }
+
+            canvas.drawRect(Rect(paddingStart, bounds.centerY() - textBounds.height() / 2, textPaddingHorizontal / 2, bounds.centerY() + textBounds.height() / 2), debugPaint)
+            canvas.drawRect(
+                Rect(
+                    bounds.right - paddingEnd,
+                    bounds.centerY() - textBounds.height() / 2,
+                    bounds.right - paddingEnd - textPaddingHorizontal / 2,
+                    bounds.centerY() + textBounds.height() / 2
+                ), debugPaint
+            )
         }
     }
 
@@ -261,10 +323,11 @@ class TextDrawable(builder: Builder.() -> Unit) : Drawable() {
             internal var background: Drawable? = null
             internal var compoundDrawables: Array<Drawable?> = arrayOf(null, null)
             internal var compoundPadding: Int = 0
+            internal var textAlign: Paint.Align = Paint.Align.CENTER
 
             init {
-                textPaint.textAlign = Paint.Align.LEFT
                 textPaint.hinting = Paint.HINTING_ON
+                textPaint.isElegantTextHeight = true
             }
 
             fun text(value: String) = apply {
@@ -291,9 +354,28 @@ class TextDrawable(builder: Builder.() -> Unit) : Drawable() {
                 textPaint.typeface = value
             }
 
-            fun bold(value: Boolean) = apply {
+            fun isFakeBoldText(value: Boolean) = apply {
                 textPaint.isFakeBoldText = value
             }
+
+            fun textAlpha(value: Int) = apply { textPaint.alpha = value }
+
+            @RequiresApi(Build.VERSION_CODES.Q)
+            fun textAlpha(blendMode: BlendMode?) = apply { textPaint.blendMode = blendMode }
+
+            fun textFlags(flags: Int) = apply { textPaint.flags = flags }
+
+            fun isDitherText(value: Boolean) = apply { textPaint.isDither = value }
+
+            fun isAntiAliasText(value: Boolean) = apply { textPaint.isAntiAlias = value }
+
+            fun isElegantTextHeight(value: Boolean) = apply { textPaint.isElegantTextHeight = value }
+
+            fun isLinearText(value: Boolean) = apply { textPaint.isLinearText = value }
+
+            fun isSubpixelText(value: Boolean) = apply { textPaint.isSubpixelText = value }
+
+            fun isUnderlineText(value: Boolean) = apply { textPaint.isUnderlineText }
 
             fun background(value: Drawable) = apply {
                 background = value
@@ -308,6 +390,10 @@ class TextDrawable(builder: Builder.() -> Unit) : Drawable() {
 
             fun compoundPadding(value: Int) = apply {
                 compoundPadding = value
+            }
+
+            fun textAlign(value: Paint.Align) = apply {
+                textAlign = value
             }
         }
     }
