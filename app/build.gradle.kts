@@ -35,5 +35,5 @@ dependencies {
     implementation("com.google.android.material:material:1.10.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
-//    implementation("com.github.sephiroth74:material_drawable:v5.0.0-rc3")
+//    implementation("com.github.sephiroth74:material_drawable:v5.0.0-rc4")
 }
