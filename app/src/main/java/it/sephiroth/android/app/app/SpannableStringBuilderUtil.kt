@@ -10,9 +10,6 @@ import androidx.annotation.DrawableRes
 import kotlin.math.max
 
 /**
- * swisscomtvui
- *
- * @author Alessandro Crugnola on 24.06.20 - 08:28
  */
 object SpannableStringBuilderUtil {
 
@@ -30,7 +27,6 @@ object SpannableStringBuilderUtil {
         val start = builder.length - size
         val end = start + size
         val span1 = VerticalCenteredImageSpan(context, drawable)
-//        val span1 = ImageSpan(drawable, ImageSpan.ALIGN_CENTER)
         builder.setSpan(span1, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
     }
 
