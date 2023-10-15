@@ -6,6 +6,12 @@ plugins {
     id("maven-publish")
 }
 
+val VERSION: String by project
+val GROUP_ID: String by project
+
+version = VERSION
+group = GROUP_ID
+
 android {
     compileSdk = 34
     namespace = "it.sephiroth.android.library.material.drawable"
@@ -40,7 +46,7 @@ afterEvaluate {
 
         @Suppress("LocalVariableName")
         val GROUP_ID: String by project
-        
+
         @Suppress("LocalVariableName")
         val VERSION: String by project
 
