@@ -30,11 +30,10 @@ android {
 dependencies {
     implementation(project(":mt_drawable"))
 
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.appcompat:appcompat:1.3.1")
-    implementation("com.google.android.material:material:1.4.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.2")
+    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.google.android.material:material:1.10.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
-    implementation("com.github.jahirfiquitiva:TextDrawable:1.0.3")
-
+//    implementation("com.github.sephiroth74:material_drawable:v5.0.0-rc2")
 }
