@@ -37,34 +37,28 @@ class MaterialShapeDrawable(private val s: Shape?) : ShapeDrawable(s) {
             this.func()
         }
 
-        fun style(style: Paint.Style): Style {
+        fun style(style: Paint.Style) = apply {
             this.style = style
-            return this
         }
 
-        fun color(color: Int): Style {
+        fun color(color: Int) = apply {
             this.color = color
-            return this
         }
 
-        fun tint(color: Int): Style {
+        fun tint(color: Int) = apply {
             this.tint = color
-            return this
         }
 
-        fun alpha(alpha: Int): Style {
+        fun alpha(alpha: Int) = apply {
             this.alpha = alpha
-            return this
         }
 
-        fun alpha(alpha: Float): Style {
+        fun alpha(alpha: Float) = apply {
             this.alpha = (alpha * 255).toInt()
-            return this
         }
 
-        fun strokeWidth(width: Float): Style {
+        fun strokeWidth(width: Float) = apply {
             this.strokeWidth = width
-            return this
         }
 
         fun copyTo(builder: Builder) {
@@ -91,35 +85,33 @@ class MaterialShapeDrawable(private val s: Shape?) : ShapeDrawable(s) {
             return builder
         }
 
-        fun style(style: Paint.Style): Builder {
+        fun style(style: Paint.Style) = apply {
             drawable.paint.style = style
-            return this
         }
 
-        fun color(color: Long): Builder {
-            drawable.paint.color = color.toInt()
-            return this
+        fun color(color: Long) = apply {
+            color(color.toInt())
         }
 
-        fun tint(color: Int): Builder {
+        fun color(color: Int) = apply {
+            drawable.paint.color = color
+        }
+
+        fun tint(color: Int) = apply {
             drawable.setTint(color)
-            return this
         }
 
-        fun alpha(alpha: Int): Builder {
+        fun alpha(alpha: Int) = apply {
             drawable.alpha = alpha
-            return this
         }
 
-        fun alpha(alpha: Float): Builder {
+        fun alpha(alpha: Float) = apply {
             drawable.alpha = (alpha * 255).toInt()
-            return this
         }
 
-        fun strokeWidth(width: Float): Builder {
+        fun strokeWidth(width: Float) = apply {
             drawable.paint.strokeWidth = width
             (drawable.shape as MaterialShape).strokeWidth = width
-            return this
         }
 
         fun build(func: Builder.() -> Unit): MaterialShapeDrawable {
