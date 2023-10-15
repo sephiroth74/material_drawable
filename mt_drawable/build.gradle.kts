@@ -7,10 +7,10 @@ plugins {
 }
 
 group = "it.sephiroth.android.library"
-version = "4.0.0"
+version = "5.0.0"
 
 android {
-    compileSdk = 33
+    compileSdk = 34
     namespace = "it.sephiroth.android.library.material.drawable"
 
     defaultConfig {
@@ -30,10 +30,8 @@ android {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.0")
-
-    implementation("androidx.appcompat:appcompat:1.3.1")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.10")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.10")
     implementation("androidx.core:core-ktx:1.9.0")
 
     testImplementation("junit:junit:4.13.2")
