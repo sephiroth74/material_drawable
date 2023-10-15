@@ -7,13 +7,11 @@ import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
-import android.text.SpannableStringBuilder
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.text.toSpannable
 import it.sephiroth.android.library.material.drawable.graphics.MaterialBackgroundDrawable
 import it.sephiroth.android.library.material.drawable.graphics.MaterialShape
 import it.sephiroth.android.library.material.drawable.graphics.MaterialShapeDrawable
@@ -38,11 +36,7 @@ class MainActivity : AppCompatActivity() {
         Log.v(TAG, "textSize: $textSize")
 
         val icon1 = resources.getDrawable(R.drawable.shopping).apply {
-            setBounds(0, 0, textSize.toInt(), textSize.toInt())
-        }
-
-        val icon2 = resources.getDrawable(android.R.drawable.ic_menu_edit).apply {
-            setBounds(0, 0, textSize.toInt(), textSize.toInt())
+            setBounds(0, 0, (textSize.toInt() * 0.9).toInt(), (textSize.toInt() * 0.9).toInt())
         }
 
         val drawable = TextDrawable {
@@ -53,7 +47,7 @@ class MainActivity : AppCompatActivity() {
             padding(0, 6, 0, 6)
             typeface(textView1.paint.typeface)
             textAlign(Paint.Align.CENTER)
-            background(MaterialShapeDrawable.Builder(MaterialShape.Type.ALL).color(0xff25B252).build())
+            background(MaterialShapeDrawable.Builder(MaterialShape.Type.ALL).strokeWidth(4f).color(0xff25B252).style(Paint.Style.STROKE).build())
             compoundDrawables(icon1, null)
             compoundPadding(14)
         }
@@ -61,14 +55,14 @@ class MainActivity : AppCompatActivity() {
 //        drawable.colorFilter = PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP)
         drawable.setBackgroundColorFilter(PorterDuffColorFilter(0x25B252, PorterDuff.Mode.SRC_ATOP))
 
-        val builder = SpannableStringBuilder()
-        builder.append("The Avengers:  ")
-        SpannableStringBuilderUtil.appendDrawable(this, builder, drawable)
-        textView1.text = builder.toSpannable()
+//        val builder = SpannableStringBuilder()
+//        builder.append("The Avengers:  ")
+//        SpannableStringBuilderUtil.appendDrawable(this, builder, drawable)
+//        textView1.text = builder.toSpannable()
 
-//        textView1.background = drawable
-//        drawable.callback = textView1
-//        textView1.setOnClickListener { Log.v("this", "onclick") }
+        textView1.background = drawable
+        drawable.callback = textView1
+        textView1.setOnClickListener { Log.v("this", "onclick") }
 
         Log.d(TAG, "Drawable added...")
     }
