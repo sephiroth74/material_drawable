@@ -6,9 +6,6 @@ plugins {
     id("maven-publish")
 }
 
-group = "it.sephiroth.android.library"
-version = "5.0.0"
-
 android {
     compileSdk = 34
     namespace = "it.sephiroth.android.library.material.drawable"
@@ -37,16 +34,23 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
 }
 
-//
-//afterEvaluate {
-//    publishing {
-//        publications {
-//            release(MavenPublication) {
-//                from = components.release
-//                groupId = group
-//                artifactId = 'material_drawable'
-//                version = version
-//            }
-//        }
-//    }
-//}
+
+afterEvaluate {
+    publishing {
+
+        @Suppress("LocalVariableName")
+        val GROUP_ID: String by project
+        
+        @Suppress("LocalVariableName")
+        val VERSION: String by project
+
+        publications {
+            create<MavenPublication>("release") {
+                from(components.getByName("release"))
+                groupId = GROUP_ID
+                artifactId = "material_drawable"
+                version = VERSION
+            }
+        }
+    }
+}
