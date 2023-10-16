@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.util.Log
 import android.util.Size
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import kotlin.math.absoluteValue
 
@@ -313,7 +314,7 @@ class TextDrawable(builder: Builder.() -> Unit) : Drawable() {
 
     companion object {
         const val TAG = "TextDrawable"
-        var DEBUG_LOG: Boolean = true
+        var DEBUG_LOG: Boolean = false
 
         class Builder {
             internal var textPadding: Size = Size(0, 0)
@@ -330,6 +331,27 @@ class TextDrawable(builder: Builder.() -> Unit) : Drawable() {
                 textPaint.isElegantTextHeight = true
             }
 
+            fun fromTextView(textView: TextView) = apply {
+                textSize(textView.textSize)
+                typeface(textView.typeface)
+                textColor(textView.paint.color)
+                isFakeBoldText(textView.paint.isFakeBoldText)
+                isDitherText(textView.paint.isDither)
+                isAntiAliasText(textView.paint.isAntiAlias)
+                isElegantTextHeight(textView.paint.isElegantTextHeight)
+                isLinearText(textView.paint.isLinearText)
+                isSubpixelText(textView.paint.isSubpixelText)
+                isUnderlineText(textView.paint.isUnderlineText)
+                textAlpha(textView.paint.alpha)
+                textAlign(textView.paint.textAlign)
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    textBlendMode(textView.paint.blendMode)
+                }
+
+                textFlags(textView.paint.flags)
+            }
+
             fun text(value: String) = apply {
                 text = value
             }
@@ -338,8 +360,12 @@ class TextDrawable(builder: Builder.() -> Unit) : Drawable() {
                 textPaint.textSize = value
             }
 
-            fun color(color: Long) = apply {
+            fun textColor(color: Long) = apply {
                 textPaint.color = color.toInt()
+            }
+
+            fun textColor(color: Int) = apply {
+                textPaint.color = color
             }
 
             fun textPadding(horizontal: Int, vertical: Int) = apply {
@@ -361,7 +387,7 @@ class TextDrawable(builder: Builder.() -> Unit) : Drawable() {
             fun textAlpha(value: Int) = apply { textPaint.alpha = value }
 
             @RequiresApi(Build.VERSION_CODES.Q)
-            fun textAlpha(blendMode: BlendMode?) = apply { textPaint.blendMode = blendMode }
+            fun textBlendMode(blendMode: BlendMode?) = apply { textPaint.blendMode = blendMode }
 
             fun textFlags(flags: Int) = apply { textPaint.flags = flags }
 

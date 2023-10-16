@@ -40,13 +40,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         val drawable = TextDrawable {
+            fromTextView(textView1)
             text("€ 29.90")
-            textSize(textSize)
-            color(0x99000000)
+//            textSize(textSize)
+//            textColor(0x99000000)
             textPadding(60, 10)
             padding(0, 6, 0, 6)
-            typeface(textView1.paint.typeface)
-            textAlign(Paint.Align.CENTER)
+//            typeface(textView1.paint.typeface)
+//            textAlign(Paint.Align.CENTER)
             background(MaterialShapeDrawable.Builder(MaterialShape.Type.ALL).strokeWidth(4f).color(0xff25B252).style(Paint.Style.STROKE).build())
             compoundDrawables(icon1, null)
             compoundPadding(14)
