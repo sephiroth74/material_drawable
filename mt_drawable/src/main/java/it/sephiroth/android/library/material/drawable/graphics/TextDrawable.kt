@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.ColorFilter
 import android.graphics.Paint
+import android.graphics.Paint.FontMetricsInt
 import android.graphics.PixelFormat
 import android.graphics.PointF
 import android.graphics.Rect
@@ -37,6 +38,7 @@ class TextDrawable(builder: Builder.() -> Unit) : Drawable() {
 
     private val textBounds = Rect()
     private val textOrigin = PointF(0f, 0f)
+    private var fontMetrics: FontMetricsInt? = null
 
     private val textAlign: Paint.Align
 
@@ -108,9 +110,11 @@ class TextDrawable(builder: Builder.() -> Unit) : Drawable() {
                 }
             }
 
+            fontMetrics = null
+
             size = Size(
                 intrinsicWidth,
-                textPaint.getFontMetricsInt(null) + (textPaddingVertical + paddingTop + paddingBottom)
+                getLineHeight() + (textPaddingVertical + paddingTop + paddingBottom)
             )
 
             if (size.height > maxHeight) {
@@ -118,18 +122,33 @@ class TextDrawable(builder: Builder.() -> Unit) : Drawable() {
             } else {
                 minValue = textPaint.textSize
             }
-
-            Thread.sleep(500)
         }
     }
 
     private fun measureText(): Size {
         val w = (textPaint.measureText(text, 0, text.length) + .5).toInt()
-        val h = textPaint.getFontMetricsInt(null)
+        val h = getLineHeight()
+
+        if (DEBUG_LOG) {
+            Log.d(TAG, "lineHeight: $h")
+        }
+
         return Size(
             w + totalHorizontalPadding(),
             h + totalVerticalPadding()
         )
+    }
+
+    private fun getFontMetricsInt(): FontMetricsInt {
+        return fontMetrics ?: run {
+            fontMetrics = textPaint.fontMetricsInt
+            fontMetrics!!
+        }
+    }
+
+    private fun getLineHeight(): Int {
+        val fontMetrics = getFontMetricsInt()
+        return fontMetrics.top.absoluteValue + fontMetrics.bottom
     }
 
     private fun totalVerticalPadding(): Int {
@@ -201,6 +220,12 @@ class TextDrawable(builder: Builder.() -> Unit) : Drawable() {
         }
 
         textPaint.getTextBounds(text, 0, text.length, textBounds)
+        val fontMetrics = getFontMetricsInt()
+
+        if (DEBUG_LOG) {
+            Log.v(TAG, "textBounds.height=${textBounds.height()}")
+            Log.v(TAG, "leading=${fontMetrics.leading}, top=${fontMetrics.top}, bottom=${fontMetrics.bottom}, ascent=${fontMetrics.ascent}, descent=${fontMetrics.descent}")
+        }
 
         background?.let { bg ->
             val boundsCopy = Rect(bounds)
@@ -227,7 +252,12 @@ class TextDrawable(builder: Builder.() -> Unit) : Drawable() {
             textOrigin.x = (paddingStart + (textPaddingHorizontal / 2)).toFloat()
         }
 
-        textOrigin.y = (bounds.height() / 2 - textBounds.exactCenterY()) + paddingTop / 2 - paddingBottom / 2
+        if (DEBUG_LOG) {
+            Log.d(TAG, "textBounds: $textBounds")
+            Log.d(TAG, "textAlign: $textAlign")
+        }
+
+        textOrigin.y = ((bounds.height() / 2 + (fontMetrics.top.absoluteValue - fontMetrics.bottom) / 2) + paddingTop / 2 - paddingBottom / 2).toFloat()
 
         compoundDrawables.firstOrNull()?.let { first ->
             val b = first.bounds
@@ -265,31 +295,27 @@ class TextDrawable(builder: Builder.() -> Unit) : Drawable() {
             Log.v(TAG, "draw(bounds=$bounds)")
             with(debugPaint) {
                 color = Color.RED
+                alpha = 127
                 style = Paint.Style.STROKE
-                strokeWidth = 0.5f
             }
+            canvas.drawRect(bounds, debugPaint)
         }
 
         background?.draw(canvas)
 
         compoundDrawables.firstOrNull()?.let { first ->
-            if (DEBUG_LOG) {
-                canvas.drawRect(first.bounds, debugPaint)
-            }
             first.draw(canvas)
         }
 
         compoundDrawables.lastOrNull()?.let { last ->
-            if (DEBUG_LOG) {
-                canvas.drawRect(last.bounds, debugPaint)
-            }
             last.draw(canvas)
         }
 
         canvas.drawText(text, textOrigin.x, textOrigin.y, textPaint)
 
         if (DEBUG_LOG) {
-            canvas.drawRect(textOrigin.x, textOrigin.y, (textOrigin.x + textBounds.width()), textOrigin.y - textBounds.height(), debugPaint)
+            val fontMetrics = getFontMetricsInt()
+            canvas.drawRect(textOrigin.x, textOrigin.y, (textOrigin.x + textBounds.width()), textOrigin.y + fontMetrics.ascent, debugPaint)
             canvas.drawLine(bounds.left.toFloat(), bounds.centerY().toFloat(), bounds.right.toFloat(), bounds.centerY().toFloat(), debugPaint)
             canvas.drawLine(bounds.centerX().toFloat(), bounds.top.toFloat(), bounds.centerX().toFloat(), bounds.bottom.toFloat(), debugPaint)
 

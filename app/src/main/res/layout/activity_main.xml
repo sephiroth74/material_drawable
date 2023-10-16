@@ -5,21 +5,36 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp">
+        android:layout_marginTop="24dp"
+        android:orientation="vertical">
 
         <TextView
-            android:textAlignment="center"
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:background="@drawable/debug_background"
-            android:textSize="12sp" />
+            android:layout_marginBottom="8dp"
+            android:textAlignment="center"
+            android:textSize="22sp" />
 
-    </RelativeLayout>
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textView1"
+            android:drawablePadding="10dp"
+            android:paddingBottom="5px"
+            android:paddingEnd="60px"
+            android:paddingStart="60px"
+            android:paddingTop="5px"
+            android:text="Not subscription"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="22sp" />
+
+    </LinearLayout>
 
 </RelativeLayout>

@@ -19,7 +19,7 @@ import it.sephiroth.android.library.material.drawable.graphics.TextDrawable
 
 class MainActivity : AppCompatActivity() {
     private lateinit var textView1: TextView
-    private lateinit var textView2: View
+    private lateinit var textView2: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         TextDrawable.DEBUG_LOG = false
 
         textView1 = findViewById(R.id.textView1)
+        textView2 = findViewById(R.id.textView2)
 
         val textSize = textView1.textSize
         Log.v(TAG, "textSize: $textSize")
@@ -41,16 +42,11 @@ class MainActivity : AppCompatActivity() {
 
         val drawable = TextDrawable {
             fromTextView(textView1)
-            text("€ 29.90")
-//            textSize(textSize)
-//            textColor(0x99000000)
+            text("Not subscription")
             textPadding(60, 10)
-            padding(0, 6, 0, 6)
-//            typeface(textView1.paint.typeface)
-//            textAlign(Paint.Align.CENTER)
-            background(MaterialShapeDrawable.Builder(MaterialShape.Type.ALL).strokeWidth(4f).color(0xff25B252).style(Paint.Style.STROKE).build())
+            background(MaterialShapeDrawable.Builder(MaterialShape.Type.ALL).strokeWidth(4f).color(0xff25B252).style(Paint.Style.FILL).build())
             compoundDrawables(icon1, null)
-            compoundPadding(14)
+            compoundPadding(24)
         }
 
 //        drawable.colorFilter = PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP)
@@ -62,8 +58,13 @@ class MainActivity : AppCompatActivity() {
 //        textView1.text = builder.toSpannable()
 
         textView1.background = drawable
-        drawable.callback = textView1
-        textView1.setOnClickListener { Log.v("this", "onclick") }
+
+        val icon3 = resources.getDrawable(R.drawable.shopping).apply {
+            setBounds(0, 0, (textSize.toInt() * 0.9).toInt(), (textSize.toInt() * 0.9).toInt())
+        }
+
+        textView2.background = MaterialShapeDrawable.Builder(MaterialShape.Type.ALL).color(0xff25B252).style(Paint.Style.FILL).build()
+        textView2.setCompoundDrawables(icon3, null, null, null)
 
         Log.d(TAG, "Drawable added...")
     }
