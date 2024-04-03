@@ -43,6 +43,10 @@ class MaterialShapeDrawable(private val s: Shape?) : ShapeDrawable(s) {
         private var tint: Int? = null
         private var alpha: Int? = null
         private var strokeWidth: Float? = null
+        private var paddingLeft: Int? = null
+        private var paddingTop: Int? = null
+        private var paddingRight: Int? = null
+        private var paddingBottom: Int? = null
 
         constructor(func: Style.() -> Unit) : this() {
             this.func()
@@ -63,6 +67,13 @@ class MaterialShapeDrawable(private val s: Shape?) : ShapeDrawable(s) {
         fun isSubpixelText(value: Boolean) = apply { isSubpixelText = value }
 
         fun isSubpixeisDitherlText(value: Boolean) = apply { isDither = value }
+
+        fun setPadding(left: Int?, top: Int?, right: Int?, bottom: Int?) = apply {
+            paddingLeft = left
+            paddingTop = top
+            paddingRight = right
+            paddingBottom = bottom
+        }
 
         fun style(style: Paint.Style) = apply {
             this.style = style
@@ -102,6 +113,10 @@ class MaterialShapeDrawable(private val s: Shape?) : ShapeDrawable(s) {
             strokeMiter?.let { builder.strokeMiter(it) }
             isSubpixelText?.let { builder.isSubpixelText(it) }
             isDither?.let { builder.isDither(it) }
+
+            paddingLeft?.let {
+                builder.setPadding(paddingLeft!!, paddingTop!!, paddingRight!!, paddingBottom!!)
+            }
         }
     }
 
@@ -172,6 +187,10 @@ class MaterialShapeDrawable(private val s: Shape?) : ShapeDrawable(s) {
         fun isSubpixelText(value: Boolean) = apply { drawable.paint.isSubpixelText = value }
 
         fun isDither(value: Boolean) = apply { drawable.paint.isDither = value }
+
+        fun setPadding(left: Int, top: Int, right: Int, bottom: Int) = apply {
+            drawable.setPadding(left, top, right, bottom)
+        }
 
         fun build(func: Builder.() -> Unit): MaterialShapeDrawable {
             this.func().also { return build() }
