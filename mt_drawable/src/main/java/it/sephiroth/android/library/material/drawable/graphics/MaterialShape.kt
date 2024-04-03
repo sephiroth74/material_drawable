@@ -14,6 +14,10 @@ class MaterialShape(private val type: Type) : Shape() {
     private val path = Path()
     private val bounds = RectF()
 
+    override fun clone(): Shape {
+        return return MaterialShape(type).also { it.strokeWidth = strokeWidth }
+    }
+
     private fun invalidatePath() {
         path.reset()
 
@@ -84,17 +88,10 @@ class MaterialShape(private val type: Type) : Shape() {
         invalidatePath()
     }
 
-//    val debugPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-//        setColor(Color.YELLOW)
-//        setStyle(Paint.Style.STROKE)
-//        strokeWidth = 4f
-//    }
-
     override fun draw(canvas: Canvas, paint: Paint) {
         canvas.saveLayer(bounds, null)
         canvas.drawPath(path, paint)
         canvas.restore()
-//        canvas.drawRect(bounds, debugPaint)
 
     }
 

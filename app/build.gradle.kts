@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "it.sephiroth.android.app.app"
-        minSdk = 24
+        minSdk = 26
         versionCode = 1
         versionName = "1.0"
     }
@@ -32,7 +32,7 @@ dependencies {
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.10.0")
+    implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
 //    implementation("com.github.sephiroth74:material_drawable:v5.0.0-rc4")

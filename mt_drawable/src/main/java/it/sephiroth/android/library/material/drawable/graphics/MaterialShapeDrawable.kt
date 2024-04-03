@@ -14,15 +14,32 @@ class MaterialShapeDrawable(private val s: Shape?) : ShapeDrawable(s) {
     constructor() : this(null)
 
     init {
-        paint.flags = Paint.SUBPIXEL_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG
-        paint.strokeCap = Paint.Cap.BUTT
-        paint.strokeJoin = Paint.Join.MITER
+        //paint.flags = Paint.SUBPIXEL_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG
+        //paint.strokeCap = Paint.Cap.BUTT
+        //paint.strokeJoin = Paint.Join.MITER
     }
 
     fun clone(): MaterialShapeDrawable {
-        val cloned = MaterialShapeDrawable(s)
+        val cloned = MaterialShapeDrawable(s?.clone())
         cloned.paint.set(paint)
         return cloned
+    }
+
+
+    override fun toString(): String {
+        return "MaterialShapeDrawable(paint=(" +
+                "flags=${paint.flags}," +
+                "color=${paint.color}," +
+                "style=${paint.style}," +
+                "alpha=${paint.alpha}," +
+                "strokeCap=${paint.strokeCap}," +
+                "strokeMiter=${paint.strokeMiter}," +
+                "strokeWidth=${paint.strokeWidth}," +
+                "strokeJoin=${paint.strokeJoin})," +
+                "alpha=${alpha}," +
+                "bounds=${bounds}," +
+                "shape=${shape}," +
+                ")"
     }
 
     companion object {
@@ -66,7 +83,7 @@ class MaterialShapeDrawable(private val s: Shape?) : ShapeDrawable(s) {
 
         fun isSubpixelText(value: Boolean) = apply { isSubpixelText = value }
 
-        fun isSubpixeisDitherlText(value: Boolean) = apply { isDither = value }
+        fun isDither(value: Boolean) = apply { isDither = value }
 
         fun setPadding(left: Int?, top: Int?, right: Int?, bottom: Int?) = apply {
             paddingLeft = left

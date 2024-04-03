@@ -1,40 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="24dp"
+    android:layout_marginTop="24dp"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:orientation="vertical">
+        android:layout_marginBottom="8dp"
+        android:drawablePadding="10dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:paddingBottom="4px"
+        android:paddingEnd="40px"
+        android:paddingStart="40px"
+        android:paddingTop="4px"
+        android:text="With subscription"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="22sp" />
 
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:textAlignment="center"
-            android:textSize="22sp" />
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawablePadding="10dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:paddingBottom="4px"
+        android:paddingEnd="40px"
+        android:paddingStart="40px"
+        android:paddingTop="4px"
+        android:text="Not subscription"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="22sp" />
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textView1"
-            android:drawablePadding="10dp"
-            android:paddingBottom="5px"
-            android:paddingEnd="60px"
-            android:paddingStart="60px"
-            android:paddingTop="5px"
-            android:text="Not subscription"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="22sp" />
+</LinearLayout>
 
-    </LinearLayout>
-
-</RelativeLayout>

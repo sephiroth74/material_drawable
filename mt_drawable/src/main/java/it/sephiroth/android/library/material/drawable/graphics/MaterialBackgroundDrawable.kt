@@ -119,5 +119,9 @@ class MaterialBackgroundDrawable {
             ripple?.let { return it } ?: run { return selector }
         }
     }
+
+    companion object {
+        const val TAG = "MaterialBackgroundDrawable"
+    }
 }
 
