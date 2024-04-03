@@ -1,8 +1,11 @@
 package it.sephiroth.android.library.material.drawable.graphics
 
+import android.graphics.BlendMode
+import android.graphics.ColorFilter
 import android.graphics.Paint
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.Shape
+import android.os.Build
 
 @Suppress("unused")
 class MaterialShapeDrawable(private val s: Shape?) : ShapeDrawable(s) {
@@ -27,6 +30,14 @@ class MaterialShapeDrawable(private val s: Shape?) : ShapeDrawable(s) {
     }
 
     class Style() {
+        private var paintFlags: Int? = null
+        private var strokeCap: Paint.Cap? = null
+        private var strokeJoin: Paint.Join? = null
+        private var blendMode: BlendMode? = null
+        private var colorFilter: ColorFilter? = null
+        private var strokeMiter: Float? = null
+        private var isSubpixelText: Boolean? = null
+        private var isDither: Boolean? = null
         private var style: Paint.Style? = null
         private var color: Int? = null
         private var tint: Int? = null
@@ -36,6 +47,22 @@ class MaterialShapeDrawable(private val s: Shape?) : ShapeDrawable(s) {
         constructor(func: Style.() -> Unit) : this() {
             this.func()
         }
+
+        fun flags(flags: Int) = apply { paintFlags = flags }
+
+        fun strokeCap(cap: Paint.Cap) = apply { strokeCap = cap }
+
+        fun strokeJoin(value: Paint.Join) = apply { strokeJoin = value }
+
+        fun blendMode(value: BlendMode?) = apply { blendMode = value }
+
+        fun colorFilter(value: ColorFilter?) = apply { colorFilter = value }
+
+        fun strokeMiter(value: Float?) = apply { strokeMiter = value }
+
+        fun isSubpixelText(value: Boolean) = apply { isSubpixelText = value }
+
+        fun isSubpixeisDitherlText(value: Boolean) = apply { isDither = value }
 
         fun style(style: Paint.Style) = apply {
             this.style = style
@@ -67,6 +94,14 @@ class MaterialShapeDrawable(private val s: Shape?) : ShapeDrawable(s) {
             tint?.let { builder.tint(it) }
             alpha?.let { builder.alpha(it) }
             strokeWidth?.let { builder.strokeWidth(it) }
+            paintFlags?.let { builder.paintFlags(it) }
+            strokeCap?.let { builder.strokeCap(it) }
+            strokeJoin?.let { builder.strokeJoin(it) }
+            blendMode?.let { builder.blendMode(it) }
+            colorFilter?.let { builder.colorFilter(it) }
+            strokeMiter?.let { builder.strokeMiter(it) }
+            isSubpixelText?.let { builder.isSubpixelText(it) }
+            isDither?.let { builder.isDither(it) }
         }
     }
 
@@ -84,6 +119,10 @@ class MaterialShapeDrawable(private val s: Shape?) : ShapeDrawable(s) {
             builder.drawable = drawable.clone()
             return builder
         }
+
+        fun paint(paint: Paint) = apply { drawable.paint.set(paint) }
+
+        fun paintFlags(value: Int) = apply { drawable.paint.flags = value }
 
         fun style(style: Paint.Style) = apply {
             drawable.paint.style = style
@@ -113,6 +152,26 @@ class MaterialShapeDrawable(private val s: Shape?) : ShapeDrawable(s) {
             drawable.paint.strokeWidth = width
             (drawable.shape as MaterialShape).strokeWidth = width
         }
+
+        fun flags(flags: Int) = apply { drawable.paint.flags = flags }
+
+        fun strokeCap(cap: Paint.Cap) = apply { drawable.paint.strokeCap = cap }
+
+        fun strokeJoin(value: Paint.Join) = apply { drawable.paint.strokeJoin = value }
+
+        fun blendMode(value: BlendMode?) = apply {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                drawable.paint.blendMode = value
+            }
+        }
+
+        fun colorFilter(value: ColorFilter?) = apply { drawable.paint.colorFilter = value }
+
+        fun strokeMiter(value: Float) = apply { drawable.paint.strokeMiter = value }
+
+        fun isSubpixelText(value: Boolean) = apply { drawable.paint.isSubpixelText = value }
+
+        fun isDither(value: Boolean) = apply { drawable.paint.isDither = value }
 
         fun build(func: Builder.() -> Unit): MaterialShapeDrawable {
             this.func().also { return build() }
