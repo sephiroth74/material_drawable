@@ -33,10 +33,9 @@ android {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.20")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.20")
-    implementation("androidx.core:core-ktx:1.12.0")
-
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.23")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.23")
+    implementation("androidx.core:core-ktx:1.13.1")
     testImplementation("junit:junit:4.13.2")
 }
 

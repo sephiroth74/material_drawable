@@ -1,14 +1,9 @@
 package it.sephiroth.android.app.app
 
 import android.content.Context
-import android.graphics.BlendMode
-import android.graphics.BlendModeColorFilter
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.ColorFilter
 import android.graphics.Paint
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
 import android.os.Build
 import android.os.Bundle
 import android.util.AttributeSet
@@ -17,7 +12,6 @@ import android.view.View
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.graphics.toColorInt
 import it.sephiroth.android.library.material.drawable.graphics.MaterialBackgroundDrawable
 import it.sephiroth.android.library.material.drawable.graphics.MaterialShape
 import it.sephiroth.android.library.material.drawable.graphics.MaterialShapeDrawable
@@ -41,25 +35,6 @@ class MainActivity : AppCompatActivity() {
         textView2 = findViewById(R.id.textView2)
 
         val textSize = textView1.textSize
-//
-//        textView1.background = MaterialBackgroundDrawable.Builder(MaterialShape.Type.ALL) {
-//            focused(MaterialShapeDrawable.Style {
-//                color(0xff0A75B0.toInt())
-//            })
-//            pressed(MaterialShapeDrawable.Style {
-//                color(0xff0A75B0.toInt())
-//            })
-//            normal(MaterialShapeDrawable.Style {
-//                flags(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG or Paint.SUBPIXEL_TEXT_FLAG or Paint.DITHER_FLAG)
-//                color(Color.WHITE)
-//                strokeWidth(2f)
-//                style(Paint.Style.STROKE)
-//                strokeCap(Paint.Cap.ROUND)
-//                isDither(true)
-//                isSubpixelText(true)
-//            })
-//        }.build()
-
         val icon3 = resources.getDrawable(R.drawable.shopping).apply {
             setBounds(0, 0, (textSize.toInt() * 0.9).toInt(), (textSize.toInt() * 0.9).toInt())
         }

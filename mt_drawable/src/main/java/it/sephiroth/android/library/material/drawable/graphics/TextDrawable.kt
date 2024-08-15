@@ -204,10 +204,6 @@ class TextDrawable(builder: Builder.() -> Unit) : Drawable() {
         return PixelFormat.TRANSLUCENT
     }
 
-    override fun setBounds(bounds: Rect) {
-        super.setBounds(bounds)
-    }
-
     override fun onBoundsChange(bounds: Rect) {
         if (DEBUG_LOG) {
             Log.i(TAG, "onBoundsChange($bounds, intrinsicHeight=$intrinsicHeight)")
@@ -370,6 +366,7 @@ class TextDrawable(builder: Builder.() -> Unit) : Drawable() {
                 isUnderlineText(textView.paint.isUnderlineText)
                 textAlpha(textView.paint.alpha)
                 textAlign(textView.paint.textAlign)
+                isStrikeThruText(textView.paint.isStrikeThruText)
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     textBlendMode(textView.paint.blendMode)
@@ -446,6 +443,10 @@ class TextDrawable(builder: Builder.() -> Unit) : Drawable() {
 
             fun textAlign(value: Paint.Align) = apply {
                 textAlign = value
+            }
+
+            fun isStrikeThruText(value: Boolean) = apply {
+                textPaint.isStrikeThruText = value
             }
         }
     }
