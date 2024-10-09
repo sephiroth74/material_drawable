@@ -17,7 +17,7 @@ android {
     namespace = "it.sephiroth.android.library.material.drawable"
 
     defaultConfig {
-        minSdk = 26
+        minSdk = 24
     }
 
     compileOptions {

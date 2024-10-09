@@ -42,5 +42,17 @@
         android:textColor="@color/white"
         android:textSize="22sp" />
 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:layout_marginTop="16dp"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="12sp">
+
+    </TextView>
+
 </LinearLayout>
 

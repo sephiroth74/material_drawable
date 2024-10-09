@@ -20,6 +20,7 @@ import it.sephiroth.android.library.material.drawable.graphics.TextDrawable
 class MainActivity : AppCompatActivity() {
     private lateinit var textView1: TextView
     private lateinit var textView2: TextView
+    private lateinit var textView3: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity() {
 
         textView1 = findViewById(R.id.textView1)
         textView2 = findViewById(R.id.textView2)
+        textView3 = findViewById(R.id.textView3)
 
         val textSize = textView1.textSize
         val icon3 = resources.getDrawable(R.drawable.shopping).apply {
@@ -59,6 +61,22 @@ class MainActivity : AppCompatActivity() {
                 strokeCap(Paint.Cap.ROUND)
             })
         }.build()
+
+        textView3.background = TextDrawable {
+            text("Hello World")
+            textView3?.let {
+                fromTextView(it)
+            }
+            textSize(textSize)
+            isAntiAliasText(true)
+            isFakeBoldText(false)
+            isElegantTextHeight(true)
+            textPadding(16, 16)
+            textAlign(Paint.Align.CENTER)
+            isStrikeThruText(true)
+            background(MaterialShapeDrawable.Builder(MaterialShape.Type.ALL).color(getColor(R.color.teal_200)).style(Paint.Style.FILL).build())
+            compoundPadding(16)
+        }
 
         textView2.setCompoundDrawables(icon3, null, null, null)
         textView1.setCompoundDrawables(icon3, null, null, null)
